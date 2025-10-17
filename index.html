@@ -3,270 +3,404 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Vanguard Defense Technologies - Startup Simulator</title>
+    <title>Vanguard Defense: Startup Strategy Simulator</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;900&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: #e5e7eb;
-            height: 100vh;
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 50%, #0f172a 100%);
+            color: #e2e8f0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 1rem;
+            box-sizing: border-box;
+        }
+        .game-container {
+            background-color: #1e293b;
+            border: 2px solid #334155;
+            border-radius: 1rem;
+            box-shadow: 0 0 40px rgba(59, 130, 246, 0.3);
+            width: 100%;
+            max-width: 1400px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            height: 95vh;
+        }
+        .header {
+            background: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+            padding: 1.5rem;
+            border-bottom: 2px solid #334155;
+            text-align: center;
+        }
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #f0f9ff;
+            margin: 0 0 0.5rem 0;
+        }
+        .header p {
+            font-size: 0.9rem;
+            color: #bfdbfe;
+            margin: 0;
+        }
+        .main-content {
+            display: flex;
+            flex-grow: 1;
+            padding: 1rem;
+            gap: 1rem;
             overflow: hidden;
         }
-        .font-mono {
-            font-family: 'JetBrains Mono', monospace;
+        .left-panel {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            overflow-y: auto;
         }
-        .terminal-box {
-            background: rgba(17, 24, 39, 0.95);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 20px rgba(139, 92, 246, 0.1);
-            backdrop-filter: blur(10px);
+        .status-panel {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1.25rem;
+        }
+        .status-panel h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 0 0 1rem 0;
+            text-align: center;
+            border-bottom: 2px solid #334155;
+            padding-bottom: 0.5rem;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 0.7rem;
+            padding: 0.5rem;
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+            border-left: 3px solid #3b82f6;
+        }
+        .status-label {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+        .status-value {
+            font-weight: 700;
+            color: #e0f2fe;
+            font-size: 0.95rem;
+        }
+        .products-panel {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+        .products-panel h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 0 0 0.75rem 0;
+            text-align: center;
+        }
+        .product-item {
+            margin-bottom: 0.75rem;
+            padding: 0.6rem;
+            background-color: #1e293b;
+            border-radius: 0.5rem;
+        }
+        .product-name {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #bfdbfe;
+            margin-bottom: 0.3rem;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: #334155;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6, #60a5fa);
+            transition: width 0.3s ease;
+        }
+        .partnerships-panel {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1rem;
+        }
+        .partnerships-panel h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 0 0 0.75rem 0;
+            text-align: center;
+        }
+        .partner-item {
+            padding: 0.5rem;
+            margin-bottom: 0.5rem;
+            background-color: #1e293b;
+            border-radius: 0.4rem;
+            border-left: 3px solid #8b5cf6;
+            font-size: 0.85rem;
+        }
+        .news-ticker {
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 0.75rem;
+            height: 120px;
+            overflow-y: auto;
+        }
+        .news-ticker h3 {
+            font-size: 1rem;
+            font-weight: 700;
+            color: #60a5fa;
+            margin: 0 0 0.5rem 0;
+        }
+        .news-item {
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-bottom: 0.4rem;
+            padding: 0.3rem;
+            border-left: 2px solid #475569;
+            padding-left: 0.5rem;
+        }
+        .center-panel {
+            flex: 1.5;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .log-panel {
+            flex: 1;
+            background-color: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 0.75rem;
+            padding: 1rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+        .log-message {
+            margin-bottom: 0.6rem;
+            padding: 0.6rem;
+            border-radius: 0.4rem;
+            line-height: 1.5;
+            font-size: 0.9rem;
+        }
+        .log-message.system { 
+            color: #60a5fa; 
+            background-color: rgba(59, 130, 246, 0.1);
+            border-left: 3px solid #3b82f6;
+        }
+        .log-message.error { 
+            color: #f87171; 
+            background-color: rgba(248, 113, 113, 0.1);
+            border-left: 3px solid #ef4444;
+        }
+        .log-message.player { 
+            color: #84cc16; 
+            background-color: rgba(132, 204, 22, 0.1);
+            border-left: 3px solid #84cc16;
+        }
+        .log-message.success { 
+            color: #4ade80; 
+            background-color: rgba(74, 222, 128, 0.1);
+            border-left: 3px solid #22c55e;
+        }
+        .log-message.warning { 
+            color: #fbbf24; 
+            background-color: rgba(251, 191, 36, 0.1);
+            border-left: 3px solid #f59e0b;
+        }
+        .log-message.news { 
+            color: #c084fc; 
+            background-color: rgba(192, 132, 252, 0.1);
+            border-left: 3px solid #a855f7;
+        }
+        .command-panel {
+            background-color: #1e293b;
+            padding: 1rem;
+            border-top: 2px solid #334155;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+        .command-input {
+            width: 100%;
+            padding: 0.85rem;
+            background-color: #0f172a;
+            border: 2px solid #334155;
+            border-radius: 0.5rem;
+            color: #e2e8f0;
+            font-size: 0.95rem;
+            box-sizing: border-box;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .command-input:focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 0.6rem;
         }
         .action-button {
-            transition: all 0.2s ease;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border: 1px solid rgba(139, 92, 246, 0.5);
+            padding: 0.75rem 0.5rem;
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            border: none;
+            border-radius: 0.5rem;
+            color: white;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.3);
+            text-align: center;
         }
         .action-button:hover {
+            background: linear-gradient(135deg, #1d4ed8 0%, #2563eb 100%);
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+            box-shadow: 0 6px 12px rgba(59, 130, 246, 0.4);
         }
         .action-button:active {
             transform: translateY(0);
         }
+        .action-button.critical {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+        .action-button.critical:hover {
+            background: linear-gradient(135deg, #b91c1c 0%, #dc2626 100%);
+        }
         .action-button.secondary {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            background: linear-gradient(135deg, #7c3aed 0%, #8b5cf6 100%);
+        }
+        .action-button.secondary:hover {
+            background: linear-gradient(135deg, #6d28d9 0%, #7c3aed 100%);
         }
         .action-button.partnership {
-            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            background: linear-gradient(135deg, #059669 0%, #10b981 100%);
         }
-        .action-button.critical {
-            background: linear-gradient(135deg, #fa709a 0%, #fee140 100%);
+        .action-button.partnership:hover {
+            background: linear-gradient(135deg, #047857 0%, #059669 100%);
         }
-        .glowing-text {
-            text-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-        }
-        .progress-bar-container {
-            background-color: rgba(31, 41, 55, 0.8);
-            border-radius: 6px;
-            overflow: hidden;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-        }
-        .progress-bar {
-            height: 100%;
-            transition: width 0.5s ease;
-            background: linear-gradient(90deg, #667eea, #764ba2);
-            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-        }
-        .log-message {
-            animation: slideIn 0.3s ease;
-        }
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-10px); }
-            to { opacity: 1; transform: translateX(0); }
-        }
-        #log-container::-webkit-scrollbar, #main-display::-webkit-scrollbar {
-            width: 6px;
-        }
-        #log-container::-webkit-scrollbar-track, #main-display::-webkit-scrollbar-track {
-            background: rgba(0,0,0,0.2);
-        }
-        #log-container::-webkit-scrollbar-thumb, #main-display::-webkit-scrollbar-thumb {
-            background: linear-gradient(180deg, #667eea, #764ba2);
-            border-radius: 3px;
-        }
-        .stat-card {
-            background: rgba(31, 41, 55, 0.6);
-            border-radius: 8px;
-            padding: 0.75rem;
-            border: 1px solid rgba(139, 92, 246, 0.2);
-            transition: all 0.2s ease;
-        }
-        .stat-card:hover {
-            border-color: rgba(139, 92, 246, 0.5);
-            box-shadow: 0 4px 12px rgba(139, 92, 246, 0.2);
-        }
-        .input-field {
-            background: rgba(31, 41, 55, 0.8);
-            border: 1px solid rgba(139, 92, 246, 0.3);
-            color: #e5e7eb;
-            outline: none;
-            transition: all 0.2s ease;
-        }
-        .input-field:focus {
-            border-color: #8b5cf6;
-            box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+
+        @media (max-width: 1024px) {
+            .main-content {
+                flex-direction: column;
+            }
+            .left-panel {
+                flex: none;
+            }
+            .center-panel {
+                min-height: 50vh;
+            }
         }
     </style>
 </head>
-<body class="p-4 md:p-6">
+<body>
+    <div class="game-container">
+        <div class="header">
+            <h1>🛡️ Vanguard Defense Technologies</h1>
+            <p>Build a defense tech unicorn. Navigate funding, R&D, contracts, and strategic partnerships to achieve $1B valuation.</p>
+        </div>
+        <div class="main-content">
+            <div class="left-panel">
+                <div class="status-panel">
+                    <h3>Company Status (Q<span id="statusQuarter">1</span> <span id="statusYear">2025</span>)</h3>
+                    <div class="status-item">
+                        <span class="status-label">💰 Cash Reserves:</span>
+                        <span id="statusCash" class="status-value">$0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">⏳ Runway:</span>
+                        <span id="statusRunway" class="status-value">0 mo</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">📈 Valuation:</span>
+                        <span id="statusValuation" class="status-value">$0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">💵 Monthly Revenue:</span>
+                        <span id="statusRevenue" class="status-value">$0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">🔥 Monthly Burn:</span>
+                        <span id="statusBurn" class="status-value">$0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">👥 Team Size:</span>
+                        <span id="statusTeam" class="status-value">0</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">😊 Team Morale:</span>
+                        <span id="statusMorale" class="status-value">0%</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">⭐ Market Reputation:</span>
+                        <span id="statusReputation" class="status-value">0%</span>
+                    </div>
+                    <div class="status-item">
+                        <span class="status-label">🏛️ DoD Relations:</span>
+                        <span id="statusDoD" class="status-value">0%</span>
+                    </div>
+                </div>
 
-    <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-3 gap-4 h-full">
+                <div class="products-panel">
+                    <h3>📦 Product Development</h3>
+                    <div id="productsContainer">
+                    </div>
+                </div>
 
-        <!-- Left Column: Company Status & Metrics -->
-        <div class="lg:col-span-1 flex flex-col gap-4 min-h-0">
-            <div class="terminal-box p-5">
-                <h2 class="text-2xl font-bold mb-4 glowing-text">🚀 VANGUARD DEFENSE</h2>
-                <div class="space-y-3">
-                    <div class="stat-card">
-                        <div class="text-xs text-gray-400 mb-1">Quarter</div>
-                        <div class="text-lg font-bold">Q<span id="status-quarter">1</span> <span id="status-year">2025</span></div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-xs text-gray-400 mb-1">💰 Cash Reserves</div>
-                        <div class="text-xl font-bold" id="status-cash">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-xs text-gray-400 mb-1">⏳ Runway</div>
-                        <div class="text-lg font-bold" id="status-runway">0 mo</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-xs text-gray-400 mb-1">📈 Valuation</div>
-                        <div class="text-xl font-bold text-purple-400" id="status-valuation">$0</div>
-                    </div>
-                    <div class="stat-card">
-                        <div class="text-xs text-gray-400 mb-1">👥 Team</div>
-                        <div class="text-lg font-bold"><span id="status-team">0</span> people</div>
+                <div class="partnerships-panel">
+                    <h3>🤝 Prime Partnerships</h3>
+                    <div id="partnershipsContainer">
+                        <div style="color: #64748b; font-size: 0.85rem; text-align: center;">No partnerships yet</div>
                     </div>
                 </div>
             </div>
 
-            <div class="terminal-box p-5 flex-shrink-0">
-                <h3 class="text-lg font-bold mb-3 glowing-text">Key Metrics</h3>
-                <div class="space-y-3">
-                    <div>
-                        <div class="flex justify-between text-sm mb-1">
-                            <span>😊 Team Morale</span>
-                            <span id="morale-value" class="font-mono">0%</span>
-                        </div>
-                        <div class="progress-bar-container h-2">
-                            <div id="morale-bar" class="progress-bar" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1">
-                            <span>⭐ Reputation</span>
-                            <span id="reputation-value" class="font-mono">0%</span>
-                        </div>
-                        <div class="progress-bar-container h-2">
-                            <div id="reputation-bar" class="progress-bar" style="width: 0%;"></div>
-                        </div>
-                    </div>
-                    <div>
-                        <div class="flex justify-between text-sm mb-1">
-                            <span>🏛️ DoD Relations</span>
-                            <span id="dod-value" class="font-mono">0%</span>
-                        </div>
-                        <div class="progress-bar-container h-2">
-                            <div id="dod-bar" class="progress-bar" style="width: 0%;"></div>
-                        </div>
+            <div class="center-panel">
+                <div class="news-ticker">
+                    <h3>📰 Market News</h3>
+                    <div id="newsContainer">
                     </div>
                 </div>
-            </div>
-
-            <div class="terminal-box p-5 flex-grow flex flex-col min-h-0">
-                <h3 class="text-lg font-bold mb-3 glowing-text">📋 Activity Log</h3>
-                <div id="log-container" class="flex-grow overflow-y-auto space-y-2"></div>
+                <div class="log-panel" id="logPanel">
+                </div>
             </div>
         </div>
-
-        <!-- Right Column: Main Display & Controls -->
-        <div class="lg:col-span-2 terminal-box p-6 flex flex-col h-full">
-            <h1 class="text-3xl font-bold mb-4 text-center glowing-text">Founder's Dashboard</h1>
-            
-            <div class="grid grid-cols-2 md:grid-cols-3 gap-2 mb-4">
-                <button onclick="processCommand('hire')" class="action-button py-3 px-4 rounded-lg font-semibold text-sm">
-                    Hire Team<br><span class="text-xs opacity-80">$500K</span>
-                </button>
-                <button onclick="processCommand('raise_funding')" class="action-button py-3 px-4 rounded-lg font-semibold text-sm">
-                    Raise Funding
-                </button>
-                <button onclick="processCommand('develop ai')" class="action-button secondary py-3 px-4 rounded-lg font-semibold text-sm">
-                    Develop AI
-                </button>
-                <button onclick="processCommand('develop drone')" class="action-button secondary py-3 px-4 rounded-lg font-semibold text-sm">
-                    Develop Drones
-                </button>
-                <button onclick="processCommand('bid_contract')" class="action-button py-3 px-4 rounded-lg font-semibold text-sm">
-                    Bid Contract
-                </button>
-                <button onclick="processCommand('partner')" class="action-button partnership py-3 px-4 rounded-lg font-semibold text-sm">
-                    Partner w/ Prime
-                </button>
-                <button onclick="processCommand('marketing')" class="action-button py-3 px-4 rounded-lg font-semibold text-sm">
-                    Marketing<br><span class="text-xs opacity-80">$200K</span>
-                </button>
-                <button onclick="processCommand('demo_day')" class="action-button py-3 px-4 rounded-lg font-semibold text-sm">
-                    Demo Day<br><span class="text-xs opacity-80">$150K</span>
-                </button>
-                <button onclick="processCommand('optimize')" class="action-button secondary py-3 px-4 rounded-lg font-semibold text-sm">
-                    Cut Costs
-                </button>
-            </div>
-
-            <div id="main-display" class="flex-grow bg-black bg-opacity-30 rounded-lg p-6 overflow-y-auto mb-4">
-                <div id="display-content" class="space-y-4"></div>
-            </div>
-
-            <div class="flex gap-3">
-                <input type="text" id="command-input" class="input-field flex-grow px-4 py-3 rounded-lg" placeholder="Type command (e.g., 'report', 'help')...">
-                <button onclick="handleCommand()" class="action-button critical px-8 py-3 rounded-lg font-bold">
-                    Next Quarter ⏭️
-                </button>
+        <div class="command-panel">
+            <input type="text" id="commandInput" class="command-input" placeholder="Type commands (e.g., 'hire', 'partner lockheed', 'report') or use buttons below">
+            <div class="button-grid">
+                <button class="action-button" onclick="processCommand('hire')">Hire Team ($500K)</button>
+                <button class="action-button" onclick="processCommand('raise_funding')">Raise Series A</button>
+                <button class="action-button secondary" onclick="processCommand('develop ai')">Dev AI System</button>
+                <button class="action-button secondary" onclick="processCommand('develop drone')">Dev Drones</button>
+                <button class="action-button" onclick="processCommand('bid_contract')">Bid DoD Contract</button>
+                <button class="action-button partnership" onclick="processCommand('partner')">Seek Partnership</button>
+                <button class="action-button" onclick="processCommand('marketing')">Marketing ($200K)</button>
+                <button class="action-button" onclick="processCommand('demo_day')">Demo Day ($150K)</button>
+                <button class="action-button secondary" onclick="processCommand('optimize')">Cut Costs</button>
+                <button class="action-button" onclick="processCommand('report')">View Report</button>
+                <button class="action-button critical" onclick="processCommand('next_quarter')">Advance Quarter</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Sound effects
-        const sounds = {
-            click: function() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 800;
-                oscillator.type = 'sine';
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.1);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.1);
-            },
-            success: function() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 1200;
-                oscillator.type = 'sine';
-                gainNode.gain.setValueAtTime(0.15, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.2);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.2);
-            },
-            error: function() {
-                const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-                const oscillator = audioContext.createOscillator();
-                const gainNode = audioContext.createGain();
-                oscillator.connect(gainNode);
-                gainNode.connect(audioContext.destination);
-                oscillator.frequency.value = 300;
-                oscillator.type = 'sawtooth';
-                gainNode.gain.setValueAtTime(0.1, audioContext.currentTime);
-                gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.15);
-                oscillator.start(audioContext.currentTime);
-                oscillator.stop(audioContext.currentTime + 0.15);
-            }
-        };
-
-        document.querySelectorAll('button').forEach(function(btn) {
-            btn.addEventListener('click', function() { sounds.click(); });
-        });
-
         const gameState = {
             quarter: 1,
             year: 2025,
@@ -276,6 +410,7 @@
             morale: 75,
             reputation: 50,
             dodRelations: 40,
+            techLevel: 35,
             burnRate: 450000,
             revenue: 100000,
             products: {
@@ -291,389 +426,561 @@
                 { name: 'Northrop Grumman', relation: 0, benefits: { revenue: 95000, reputation: 13, dodRelations: 19 } },
                 { name: 'Boeing Defense', relation: 0, benefits: { revenue: 85000, reputation: 11, dodRelations: 16 } }
             ],
+            news: [],
             gameOver: false,
+            winCondition: { valuation: 1000000000, message: 'Unicorn Status!' },
             fundingRound: 'Seed'
         };
 
-        function addLog(message, type) {
-            type = type || 'info';
-            const logContainer = document.getElementById('log-container');
-            const logEntry = document.createElement('div');
-            logEntry.className = 'log-message text-sm p-2 rounded';
-            
-            var bgColor = 'bg-gray-800';
-            var textColor = 'text-gray-300';
-            if (type === 'success') { bgColor = 'bg-green-900'; textColor = 'text-green-300'; }
-            else if (type === 'error') { bgColor = 'bg-red-900'; textColor = 'text-red-300'; }
-            else if (type === 'warning') { bgColor = 'bg-yellow-900'; textColor = 'text-yellow-300'; }
-            else if (type === 'player') { bgColor = 'bg-purple-900'; textColor = 'text-purple-300'; }
-            
-            logEntry.className += ' ' + bgColor + ' ' + textColor;
-            logEntry.innerHTML = '<span class="font-mono text-xs opacity-70">Q' + gameState.quarter + ' ' + gameState.year + '</span> ' + message;
-            logContainer.insertBefore(logEntry, logContainer.firstChild);
-            
-            while (logContainer.children.length > 30) {
-                logContainer.removeChild(logContainer.lastChild);
+        const logPanel = document.getElementById('logPanel');
+        const commandInput = document.getElementById('commandInput');
+        const newsContainer = document.getElementById('newsContainer');
+
+        function logMessage(message, type) {
+            type = type || 'system';
+            const msgElement = document.createElement('div');
+            msgElement.classList.add('log-message', type);
+            msgElement.textContent = '[Q' + gameState.quarter + ' ' + gameState.year + '] ' + message;
+            logPanel.prepend(msgElement);
+            while (logPanel.children.length > 50) {
+                logPanel.removeChild(logPanel.lastChild);
             }
+        }
+
+        function addNews(message) {
+            gameState.news.unshift(message);
+            if (gameState.news.length > 5) gameState.news.pop();
+            updateNewsDisplay();
+            logMessage('📰 ' + message, 'news');
+        }
+
+        function updateNewsDisplay() {
+            newsContainer.innerHTML = '';
+            gameState.news.forEach(function(news) {
+                const newsItem = document.createElement('div');
+                newsItem.className = 'news-item';
+                newsItem.textContent = news;
+                newsContainer.appendChild(newsItem);
+            });
+        }
+
+        function updateProductsDisplay() {
+            const container = document.getElementById('productsContainer');
+            container.innerHTML = '';
+            
+            Object.keys(gameState.products).forEach(function(key) {
+                const product = gameState.products[key];
+                const productDiv = document.createElement('div');
+                productDiv.className = 'product-item';
+                
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'product-name';
+                nameDiv.textContent = product.name + ': ' + product.progress + '% ' + (product.deployed ? '✅' : '');
+                
+                const progressBar = document.createElement('div');
+                progressBar.className = 'progress-bar';
+                
+                const progressFill = document.createElement('div');
+                progressFill.className = 'progress-fill';
+                progressFill.style.width = product.progress + '%';
+                
+                progressBar.appendChild(progressFill);
+                productDiv.appendChild(nameDiv);
+                productDiv.appendChild(progressBar);
+                container.appendChild(productDiv);
+            });
+        }
+
+        function updatePartnershipsDisplay() {
+            const container = document.getElementById('partnershipsContainer');
+            const activePartnerships = gameState.partnerships;
+            
+            if (activePartnerships.length === 0) {
+                container.innerHTML = '<div style="color: #64748b; font-size: 0.85rem; text-align: center;">No partnerships yet</div>';
+                return;
+            }
+            
+            container.innerHTML = '';
+            activePartnerships.forEach(function(p) {
+                const partnerDiv = document.createElement('div');
+                partnerDiv.className = 'partner-item';
+                partnerDiv.innerHTML = '<strong>' + p.name + '</strong><br><span style="color: #94a3b8; font-size: 0.75rem;">+$' + (p.benefits.revenue/1000).toFixed(0) + 'K/mo revenue</span>';
+                container.appendChild(partnerDiv);
+            });
         }
 
         function updateDisplay() {
-            document.getElementById('status-quarter').textContent = gameState.quarter;
-            document.getElementById('status-year').textContent = gameState.year;
-            document.getElementById('status-cash').textContent = '$' + (gameState.cash / 1000000).toFixed(2) + 'M';
+            document.getElementById('statusQuarter').textContent = gameState.quarter;
+            document.getElementById('statusYear').textContent = gameState.year;
+            document.getElementById('statusCash').textContent = '$' + (gameState.cash / 1000000).toFixed(2) + 'M';
             
             const runway = Math.max(0, Math.floor(gameState.cash / gameState.burnRate));
-            const runwayEl = document.getElementById('status-runway');
-            runwayEl.textContent = runway + ' mo';
-            runwayEl.style.color = runway >= 12 ? '#4ade80' : runway >= 6 ? '#fbbf24' : '#f87171';
+            document.getElementById('statusRunway').textContent = runway + ' mo';
+            document.getElementById('statusRunway').style.color = runway >= 12 ? '#4ade80' : runway >= 6 ? '#fbbf24' : '#f87171';
             
-            document.getElementById('status-valuation').textContent = '$' + (gameState.valuation / 1000000).toFixed(1) + 'M';
-            document.getElementById('status-team').textContent = gameState.employees;
+            document.getElementById('statusValuation').textContent = '$' + (gameState.valuation / 1000000).toFixed(1) + 'M';
+            document.getElementById('statusRevenue').textContent = '$' + (gameState.revenue / 1000).toFixed(0) + 'K';
+            document.getElementById('statusBurn').textContent = '$' + (gameState.burnRate / 1000).toFixed(0) + 'K';
+            document.getElementById('statusTeam').textContent = gameState.employees;
+            document.getElementById('statusMorale').textContent = Math.round(gameState.morale) + '%';
+            document.getElementById('statusReputation').textContent = Math.round(gameState.reputation) + '%';
+            document.getElementById('statusDoD').textContent = Math.round(gameState.dodRelations) + '%';
             
-            document.getElementById('morale-value').textContent = Math.round(gameState.morale) + '%';
-            document.getElementById('morale-bar').style.width = gameState.morale + '%';
-            
-            document.getElementById('reputation-value').textContent = Math.round(gameState.reputation) + '%';
-            document.getElementById('reputation-bar').style.width = gameState.reputation + '%';
-            
-            document.getElementById('dod-value').textContent = Math.round(gameState.dodRelations) + '%';
-            document.getElementById('dod-bar').style.width = gameState.dodRelations + '%';
-            
-            updateMainDisplay();
+            updateProductsDisplay();
+            updatePartnershipsDisplay();
         }
 
-        function updateMainDisplay() {
-            const content = document.getElementById('display-content');
-            content.innerHTML = '<div class="space-y-4">';
-            
-            content.innerHTML += '<div class="stat-card"><h3 class="font-bold text-lg mb-2">💵 Financial Overview</h3>';
-            content.innerHTML += '<p class="text-sm">Monthly Revenue: <span class="font-bold text-green-400">$' + (gameState.revenue/1000).toFixed(0) + 'K</span></p>';
-            content.innerHTML += '<p class="text-sm">Monthly Burn: <span class="font-bold text-red-400">$' + (gameState.burnRate/1000).toFixed(0) + 'K</span></p>';
-            content.innerHTML += '<p class="text-sm">Net: <span class="font-bold">' + ((gameState.revenue - gameState.burnRate) >= 0 ? '+' : '') + '$' + ((gameState.revenue - gameState.burnRate)/1000).toFixed(0) + 'K/mo</span></p></div>';
-            
-            content.innerHTML += '<div class="stat-card"><h3 class="font-bold text-lg mb-2">📦 Products</h3>';
-            Object.keys(gameState.products).forEach(function(key) {
-                const p = gameState.products[key];
-                content.innerHTML += '<div class="mb-2"><div class="flex justify-between text-sm mb-1">';
-                content.innerHTML += '<span>' + p.name + '</span><span class="font-mono">' + p.progress + '%' + (p.deployed ? ' ✅' : '') + '</span></div>';
-                content.innerHTML += '<div class="progress-bar-container h-2"><div class="progress-bar" style="width: ' + p.progress + '%"></div></div></div>';
-            });
-            content.innerHTML += '</div>';
-            
-            if (gameState.partnerships.length > 0) {
-                content.innerHTML += '<div class="stat-card"><h3 class="font-bold text-lg mb-2">🤝 Partnerships</h3>';
-                gameState.partnerships.forEach(function(p) {
-                    content.innerHTML += '<p class="text-sm">• ' + p.name + ' <span class="text-green-400">(+$' + (p.benefits.revenue/1000).toFixed(0) + 'K/mo)</span></p>';
-                });
-                content.innerHTML += '</div>';
-            }
-            
-            content.innerHTML += '<div class="stat-card"><h3 class="font-bold text-lg mb-2">📋 Status</h3>';
-            content.innerHTML += '<p class="text-sm">Funding Stage: <span class="font-bold">' + gameState.fundingRound + '</span></p>';
-            content.innerHTML += '<p class="text-sm">Active Contracts: <span class="font-bold">' + gameState.contracts.length + '</span></p>';
-            content.innerHTML += '<p class="text-sm">Goal: <span class="font-bold text-purple-400">Reach $1B valuation</span></p></div>';
-            
-            content.innerHTML += '</div>';
-        }
-
-        function checkWin() {
-            if (gameState.valuation >= 1000000000) {
-                sounds.success();
-                addLog('🎉 VICTORY! You have achieved unicorn status with a $' + (gameState.valuation/1000000000).toFixed(1) + 'B valuation!', 'success');
+        function checkWinCondition() {
+            if (gameState.valuation >= gameState.winCondition.valuation) {
+                logMessage('🎉 VICTORY! ' + gameState.winCondition.message + ' You have built a defense tech unicorn!', 'success');
+                addNews('BREAKING: Vanguard Defense reaches $' + (gameState.valuation/1000000000).toFixed(1) + 'B valuation!');
                 gameState.gameOver = true;
+                logMessage('Type "reset" to play again.', 'system');
                 return true;
             }
             return false;
         }
 
-        function checkLoss() {
+        function checkLossConditions() {
             const runway = Math.floor(gameState.cash / gameState.burnRate);
             if (runway <= 0 && gameState.cash < 0) {
-                sounds.error();
-                addLog('💀 GAME OVER: Out of cash. Company shut down.', 'error');
+                logMessage('💀 GAME OVER: You ran out of cash. The company has shut down.', 'error');
+                addNews('Vanguard Defense closes doors amid cash crisis');
                 gameState.gameOver = true;
+                logMessage('Type "reset" to try again.', 'system');
                 return true;
             }
             if (gameState.morale <= 10 && gameState.quarter > 4) {
-                sounds.error();
-                addLog('💀 GAME OVER: Team quit due to low morale.', 'error');
+                logMessage('💀 GAME OVER: Your entire team quit due to low morale.', 'error');
+                addNews('Mass exodus at Vanguard Defense as morale collapses');
                 gameState.gameOver = true;
+                logMessage('Type "reset" to try again.', 'system');
                 return true;
             }
             return false;
         }
 
+        function randomEvent() {
+            const events = [
+                { 
+                    chance: 0.12, 
+                    effect: function() {
+                        gameState.reputation = Math.max(0, gameState.reputation - 8);
+                        addNews('Competitor Anduril announces major AI breakthrough');
+                    }
+                },
+                { 
+                    chance: 0.10, 
+                    effect: function() {
+                        gameState.dodRelations += 12;
+                        addNews('DoD releases new RFP for autonomous systems');
+                        logMessage('✨ New DoD opportunity! Your relations improved.', 'success');
+                    }
+                },
+                { 
+                    chance: 0.08, 
+                    effect: function() {
+                        gameState.morale = Math.max(0, gameState.morale - 12);
+                        addNews('Tech talent war intensifies in defense sector');
+                        logMessage('⚠️ Key engineer received competing offer. Morale impacted.', 'warning');
+                    }
+                },
+                {
+                    chance: 0.07,
+                    effect: function() {
+                        const bonus = Math.floor(Math.random() * 500000) + 500000;
+                        gameState.cash += bonus;
+                        addNews('SBIR grants announced for defense tech startups');
+                        logMessage('✨ Government grant awarded: $' + (bonus/1000).toFixed(0) + 'K!', 'success');
+                    }
+                },
+                {
+                    chance: 0.06,
+                    effect: function() {
+                        gameState.reputation += 10;
+                        addNews('Defense tech startups gain attention at AUSA conference');
+                        logMessage('✨ Positive media coverage boosted reputation!', 'success');
+                    }
+                },
+                {
+                    chance: 0.05,
+                    effect: function() {
+                        gameState.dodRelations = Math.max(0, gameState.dodRelations - 10);
+                        addNews('Pentagon tightens security clearance requirements');
+                        logMessage('⚠️ New regulations slowed DoD engagement.', 'warning');
+                    }
+                }
+            ];
+
+            events.forEach(function(event) {
+                if (Math.random() < event.chance) {
+                    event.effect();
+                }
+            });
+        }
+
         function advanceQuarter() {
-            if (gameState.gameOver) return;
+            logMessage('━━━ End of Q' + gameState.quarter + ' ' + gameState.year + ' ━━━', 'system');
             
-            addLog('━━━ Quarter Complete ━━━', 'info');
+            const netCash = gameState.cash + gameState.revenue - gameState.burnRate;
+            gameState.cash = netCash;
             
-            gameState.cash += gameState.revenue - gameState.burnRate;
-            addLog('Financial update: +$' + (gameState.revenue/1000).toFixed(0) + 'K revenue, -$' + (gameState.burnRate/1000).toFixed(0) + 'K burn', 'info');
-            
+            logMessage('📊 Financial: Revenue +$' + (gameState.revenue/1000).toFixed(0) + 'K, Burn -$' + (gameState.burnRate/1000).toFixed(0) + 'K', 'system');
+
             Object.keys(gameState.products).forEach(function(key) {
-                const p = gameState.products[key];
-                if (p.progress > 0 && p.progress < 100 && !p.deployed) {
-                    p.progress = Math.min(100, p.progress + 8);
-                    if (p.progress >= 100 && !p.deployed) {
-                        p.deployed = true;
-                        gameState.revenue += p.revenue;
+                const product = gameState.products[key];
+                if (product.progress > 0 && product.progress < 100 && !product.deployed) {
+                    product.progress = Math.min(100, product.progress + 8);
+                    if (product.progress >= 100 && !product.deployed) {
+                        product.deployed = true;
+                        gameState.revenue += product.revenue;
                         gameState.reputation += 15;
                         gameState.valuation = Math.floor(gameState.valuation * 1.15);
-                        sounds.success();
-                        addLog('🚀 ' + p.name + ' launched! +$' + (p.revenue/1000).toFixed(0) + 'K/mo revenue', 'success');
+                        addNews('Vanguard Defense launches ' + product.name);
+                        logMessage('🚀 ' + product.name + ' completed and deployed! Revenue +$' + (product.revenue/1000).toFixed(0) + 'K/mo.', 'success');
                     }
                 }
             });
-            
+
             gameState.morale = Math.max(0, gameState.morale - (Math.random() * 3));
             gameState.reputation = Math.max(0, gameState.reputation - (Math.random() * 2));
-            
+
+            gameState.partnerships.forEach(function(p) {
+                const prime = gameState.primes.find(function(pr) { return pr.name === p.name; });
+                if (prime) {
+                    prime.relation = Math.max(0, prime.relation - 2);
+                }
+            });
+
+            randomEvent();
+
+            if (gameState.quarter === 4) {
+                const growthRate = gameState.valuation / 20000000;
+                if (growthRate > 2) {
+                    addNews('Investors bullish on Vanguard Defense growth trajectory');
+                    gameState.reputation += 5;
+                } else if (growthRate < 1.2) {
+                    addNews('Investors question Vanguard Defense progress');
+                    gameState.reputation = Math.max(0, gameState.reputation - 5);
+                }
+            }
+
             if (gameState.quarter === 4) {
                 gameState.quarter = 1;
                 gameState.year++;
             } else {
                 gameState.quarter++;
             }
+
+            logMessage('━━━ Start of Q' + gameState.quarter + ' ' + gameState.year + ' ━━━', 'system');
             
             updateDisplay();
-            if (!checkLoss()) checkWin();
+            if (!checkLossConditions()) {
+                checkWinCondition();
+            }
         }
 
-        function processCommand(cmd) {
-            if (gameState.gameOver && cmd !== 'reset') {
-                sounds.error();
-                addLog('Game over. Type "reset" to start again.', 'error');
+        function processCommand(command) {
+            command = command.toLowerCase().trim();
+            if (command) {
+                logMessage('> ' + command, 'player');
+            }
+
+            if (gameState.gameOver && command !== 'reset') {
+                logMessage('Game is over. Type "reset" to start a new game.', 'error');
                 return;
             }
-            
-            addLog('> ' + cmd, 'player');
-            const parts = cmd.toLowerCase().trim().split(' ');
+
+            const parts = command.split(' ');
             const action = parts[0];
             const target = parts.slice(1).join(' ');
-            
+
             switch(action) {
                 case 'hire':
                     if (gameState.cash < 500000) {
-                        sounds.error();
-                        addLog('❌ Insufficient funds ($500K required)', 'error');
+                        logMessage('❌ Insufficient funds. Hiring requires $500K.', 'error');
                         break;
                     }
                     gameState.cash -= 500000;
                     gameState.employees += 5;
                     gameState.burnRate += 50000;
                     gameState.morale = Math.min(100, gameState.morale + 8);
-                    sounds.success();
-                    addLog('✅ Hired 5 engineers. Team: ' + gameState.employees, 'success');
+                    logMessage('✅ Hired 5 engineers. Team capacity increased!', 'success');
                     break;
-                    
+
                 case 'raise_funding':
                 case 'raise':
-                    var funding, newRound;
+                    var funding, dilution, newRound;
                     if (gameState.fundingRound === 'Seed') {
                         funding = 10000000;
+                        dilution = 15;
                         newRound = 'Series A';
                     } else if (gameState.fundingRound === 'Series A') {
                         funding = 25000000;
+                        dilution = 12;
                         newRound = 'Series B';
                     } else {
                         funding = 50000000;
+                        dilution = 10;
                         newRound = 'Series C';
                     }
+                    
                     gameState.cash += funding;
                     gameState.valuation = Math.floor(gameState.valuation * 1.8);
                     gameState.fundingRound = newRound;
-                    sounds.success();
-                    addLog('✅ Raised $' + (funding/1000000) + 'M ' + gameState.fundingRound + '! Valuation: $' + (gameState.valuation/1000000).toFixed(1) + 'M', 'success');
+                    addNews('Vanguard Defense closes $' + (funding/1000000) + 'M ' + gameState.fundingRound + ' round');
+                    logMessage('✅ Raised $' + (funding/1000000) + 'M ' + gameState.fundingRound + '! Valuation now $' + (gameState.valuation/1000000).toFixed(1) + 'M (' + dilution + '% dilution).', 'success');
                     break;
-                    
+
                 case 'develop':
-                    if (target.includes('ai')) {
+                    if (target.includes('ai') || target.includes('surveillance')) {
                         if (gameState.products.aiSurveillance.progress >= 100) {
-                            addLog('ℹ️ AI Surveillance already complete', 'info');
+                            logMessage('ℹ️ AI Surveillance already complete.', 'system');
                             break;
                         }
                         gameState.products.aiSurveillance.progress = Math.min(100, gameState.products.aiSurveillance.progress + 20);
-                        sounds.success();
-                        addLog('🔬 AI Surveillance: ' + gameState.products.aiSurveillance.progress + '%', 'success');
+                        gameState.techLevel = Math.min(100, gameState.techLevel + 10);
+                        logMessage('🔬 AI Surveillance development progressed to ' + gameState.products.aiSurveillance.progress + '%', 'success');
                     } else if (target.includes('drone')) {
                         if (gameState.cash < 800000) {
-                            sounds.error();
-                            addLog('❌ Insufficient funds ($800K required)', 'error');
+                            logMessage('❌ Insufficient funds. Drone program requires $800K.', 'error');
                             break;
                         }
                         gameState.cash -= 800000;
                         gameState.products.autonomousDrone.progress = Math.max(gameState.products.autonomousDrone.progress, 25);
-                        sounds.success();
-                        addLog('🔬 Drone program initiated', 'success');
+                        gameState.techLevel = Math.min(100, gameState.techLevel + 15);
+                        logMessage('🔬 Autonomous Drone program initiated! High-risk, high-reward.', 'success');
                     } else if (target.includes('cyber')) {
                         if (gameState.cash < 600000) {
-                            sounds.error();
-                            addLog('❌ Insufficient funds ($600K required)', 'error');
+                            logMessage('❌ Insufficient funds. Cyber Defense requires $600K.', 'error');
                             break;
                         }
                         gameState.cash -= 600000;
                         gameState.products.cyberDefense.progress = Math.max(gameState.products.cyberDefense.progress, 20);
-                        sounds.success();
-                        addLog('🔬 Cyber Defense program started', 'success');
+                        gameState.techLevel = Math.min(100, gameState.techLevel + 12);
+                        logMessage('🔬 Cyber Defense program started!', 'success');
+                    } else {
+                        logMessage('❌ Unknown product. Try: ai, drone, or cyber.', 'error');
                     }
                     break;
-                    
+
                 case 'partner':
                 case 'partnership':
                     var selectedPrime;
+                    
                     if (target) {
                         selectedPrime = gameState.primes.find(function(p) { return p.name.toLowerCase().includes(target); });
                     } else {
-                        const available = gameState.primes.filter(function(p) {
+                        const availablePrimes = gameState.primes.filter(function(p) {
                             return !gameState.partnerships.find(function(partner) { return partner.name === p.name; });
                         });
-                        if (available.length > 0) {
-                            selectedPrime = available[Math.floor(Math.random() * available.length)];
+                        if (availablePrimes.length > 0) {
+                            selectedPrime = availablePrimes[Math.floor(Math.random() * availablePrimes.length)];
                         }
                     }
+                    
                     if (!selectedPrime) {
-                        sounds.error();
-                        addLog('❌ No prime available', 'error');
+                        logMessage('❌ No prime contractor available. Try: lockheed, raytheon, northrop, or boeing.', 'error');
                         break;
                     }
+                    
                     if (gameState.partnerships.find(function(p) { return p.name === selectedPrime.name; })) {
-                        addLog('ℹ️ Already partnered with ' + selectedPrime.name, 'info');
+                        logMessage('ℹ️ Already partnered with ' + selectedPrime.name + '.', 'system');
                         break;
                     }
+                    
                     if (gameState.cash < 300000) {
-                        sounds.error();
-                        addLog('❌ Insufficient funds ($300K required)', 'error');
+                        logMessage('❌ Insufficient funds. Partnership development requires $300K.', 'error');
                         break;
                     }
+                    
+                    const partnershipChance = 40 + (gameState.reputation * 0.4) + (gameState.techLevel * 0.3);
+                    
                     gameState.cash -= 300000;
-                    const chance = 40 + (gameState.reputation * 0.4);
-                    if (Math.random() * 100 < chance) {
+                    
+                    if (Math.random() * 100 < partnershipChance) {
                         gameState.partnerships.push(selectedPrime);
+                        selectedPrime.relation = 60;
                         gameState.revenue += selectedPrime.benefits.revenue;
                         gameState.reputation = Math.min(100, gameState.reputation + selectedPrime.benefits.reputation);
                         gameState.dodRelations = Math.min(100, gameState.dodRelations + selectedPrime.benefits.dodRelations);
                         gameState.valuation = Math.floor(gameState.valuation * 1.25);
-                        sounds.success();
-                        addLog('🤝 Partnership with ' + selectedPrime.name + ' secured!', 'success');
+                        addNews('Vanguard Defense announces partnership with ' + selectedPrime.name);
+                        logMessage('🤝 Partnership with ' + selectedPrime.name + ' established! Major benefits unlocked.', 'success');
                     } else {
-                        sounds.error();
-                        addLog('⚠️ Partnership attempt failed (' + chance.toFixed(0) + '% chance)', 'warning');
+                        selectedPrime.relation += 15;
+                        logMessage('⚠️ Partnership with ' + selectedPrime.name + ' not secured yet. Relationship improved. (Success chance was ' + partnershipChance.toFixed(0) + '%)', 'warning');
                     }
                     break;
-                    
+
                 case 'bid_contract':
                 case 'bid':
                     if (gameState.dodRelations < 50) {
-                        sounds.error();
-                        addLog('❌ DoD relations too low (need 50%)', 'error');
+                        logMessage('❌ DoD relations too low (need 50%). Build credibility first.', 'error');
                         break;
                     }
                     const contractValue = Math.floor(Math.random() * 2000000) + 1500000;
-                    gameState.contracts.push({ value: contractValue });
+                    gameState.contracts.push({ name: 'DoD Contract', value: contractValue });
                     gameState.revenue += Math.floor(contractValue / 4);
                     gameState.reputation = Math.min(100, gameState.reputation + 15);
                     gameState.dodRelations = Math.min(100, gameState.dodRelations + 10);
                     gameState.valuation = Math.floor(gameState.valuation * 1.12);
-                    sounds.success();
-                    addLog('✅ Won $' + (contractValue/1000000).toFixed(1) + 'M DoD contract!', 'success');
+                    addNews('Vanguard Defense wins $' + (contractValue/1000000).toFixed(1) + 'M DoD contract');
+                    logMessage('✅ Won DoD contract worth $' + (contractValue/1000000).toFixed(1) + 'M! Revenue +$' + (contractValue/4000).toFixed(0) + 'K/quarter.', 'success');
                     break;
-                    
+
                 case 'marketing':
                 case 'market':
                     if (gameState.cash < 200000) {
-                        sounds.error();
-                        addLog('❌ Insufficient funds ($200K required)', 'error');
+                        logMessage('❌ Insufficient funds. Marketing requires $200K.', 'error');
                         break;
                     }
                     gameState.cash -= 200000;
                     gameState.reputation = Math.min(100, gameState.reputation + 12);
                     gameState.dodRelations = Math.min(100, gameState.dodRelations + 6);
-                    sounds.success();
-                    addLog('✅ Marketing campaign launched', 'success');
+                    logMessage('✅ Marketing campaign launched. Brand visibility increased!', 'success');
                     break;
-                    
+
                 case 'demo_day':
                 case 'demo':
                     if (gameState.cash < 150000) {
-                        sounds.error();
-                        addLog('❌ Insufficient funds ($150K required)', 'error');
+                        logMessage('❌ Insufficient funds. Demo day requires $150K.', 'error');
                         break;
                     }
                     gameState.cash -= 150000;
-                    const demoChance = 30 + (gameState.reputation * 0.5);
-                    if (Math.random() * 100 < demoChance) {
+                    
+                    const demoSuccess = 30 + (gameState.techLevel * 0.5) + (gameState.reputation * 0.3);
+                    
+                    if (Math.random() * 100 < demoSuccess) {
                         gameState.reputation = Math.min(100, gameState.reputation + 18);
                         gameState.dodRelations = Math.min(100, gameState.dodRelations + 15);
                         gameState.valuation = Math.floor(gameState.valuation * 1.15);
-                        sounds.success();
-                        addLog('✅ Demo day success! Major reputation boost', 'success');
+                        addNews('Vanguard Defense wows crowd at industry demo day');
+                        logMessage('✅ Demo day was a huge success! Reputation and DoD relations significantly boosted!', 'success');
                     } else {
-                        sounds.error();
-                        addLog('⚠️ Demo day had mixed results', 'warning');
+                        gameState.reputation = Math.max(0, gameState.reputation - 5);
+                        logMessage('⚠️ Demo day had mixed results. (Success chance was ' + demoSuccess.toFixed(0) + '%)', 'warning');
                     }
                     break;
-                    
+
                 case 'optimize':
                 case 'cut':
                     gameState.burnRate = Math.max(300000, Math.floor(gameState.burnRate * 0.85));
                     gameState.morale = Math.max(0, gameState.morale - 10);
-                    sounds.success();
-                    addLog('✅ Burn reduced 15%, morale dropped', 'warning');
+                    logMessage('✅ Operations optimized. Burn rate reduced 15%, but morale dropped.', 'warning');
                     break;
-                    
+
+                case 'team_building':
+                case 'morale':
+                    if (gameState.cash < 100000) {
+                        logMessage('❌ Insufficient funds. Team building requires $100K.', 'error');
+                        break;
+                    }
+                    gameState.cash -= 100000;
+                    gameState.morale = Math.min(100, gameState.morale + 18);
+                    logMessage('✅ Team building event completed. Morale significantly boosted!', 'success');
+                    break;
+
                 case 'report':
                 case 'status':
-                    addLog('━━━ COMPANY REPORT ━━━', 'info');
-                    addLog('Q' + gameState.quarter + ' ' + gameState.year + ' | Stage: ' + gameState.fundingRound, 'info');
-                    addLog('Cash: $' + (gameState.cash/1000000).toFixed(2) + 'M | Valuation: $' + (gameState.valuation/1000000).toFixed(1) + 'M', 'info');
-                    addLog('Team: ' + gameState.employees + ' | Morale: ' + Math.round(gameState.morale) + '%', 'info');
-                    addLog('Contracts: ' + gameState.contracts.length + ' | Partnerships: ' + gameState.partnerships.length, 'info');
+                    logMessage('━━━━━━━━━ COMPANY REPORT ━━━━━━━━━', 'system');
+                    logMessage('📅 Quarter: Q' + gameState.quarter + ' ' + gameState.year + ' | Funding Stage: ' + gameState.fundingRound, 'system');
+                    logMessage('💰 Cash: $' + (gameState.cash/1000000).toFixed(2) + 'M | Burn: $' + (gameState.burnRate/1000).toFixed(0) + 'K/mo | Revenue: $' + (gameState.revenue/1000).toFixed(0) + 'K/mo', 'system');
+                    logMessage('📈 Valuation: $' + (gameState.valuation/1000000).toFixed(1) + 'M (Goal: $1,000M)', 'system');
+                    logMessage('👥 Team: ' + gameState.employees + ' | Morale: ' + Math.round(gameState.morale) + '%', 'system');
+                    logMessage('⭐ Reputation: ' + Math.round(gameState.reputation) + '% | DoD Relations: ' + Math.round(gameState.dodRelations) + '%', 'system');
+                    logMessage('🔬 Tech Level: ' + Math.round(gameState.techLevel) + '%', 'system');
+                    logMessage('📋 Products:', 'system');
+                    Object.keys(gameState.products).forEach(function(key) {
+                        const p = gameState.products[key];
+                        logMessage('   ' + p.name + ': ' + p.progress + '% ' + (p.deployed ? '(DEPLOYED ✅)' : ''), 'system');
+                    });
+                    logMessage('📑 Active Contracts: ' + gameState.contracts.length, 'system');
+                    logMessage('🤝 Prime Partnerships: ' + (gameState.partnerships.map(function(p) { return p.name; }).join(', ') || 'None'), 'system');
+                    logMessage('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'system');
                     break;
-                    
+
                 case 'help':
-                    addLog('━━━ COMMANDS ━━━', 'info');
-                    addLog('hire | raise_funding | develop [ai|drone|cyber]', 'info');
-                    addLog('partner | bid_contract | marketing | demo_day', 'info');
-                    addLog('optimize | report | reset', 'info');
+                    logMessage('━━━━━━━━━ COMMANDS ━━━━━━━━━', 'system');
+                    logMessage('hire - Hire 5 engineers ($500K)', 'system');
+                    logMessage('raise_funding - Raise next funding round', 'system');
+                    logMessage('develop [ai|drone|cyber] - Develop products', 'system');
+                    logMessage('partner [lockheed|raytheon|northrop|boeing] - Seek prime partnership ($300K)', 'system');
+                    logMessage('bid_contract - Bid on DoD contracts (needs 50% DoD relations)', 'system');
+                    logMessage('marketing - Run marketing campaign ($200K)', 'system');
+                    logMessage('demo_day - Host product demo for DoD/industry ($150K)', 'system');
+                    logMessage('optimize - Cut costs (reduces morale)', 'system');
+                    logMessage('team_building - Boost morale ($100K)', 'system');
+                    logMessage('report - View detailed company status', 'system');
+                    logMessage('next_quarter - Advance to next quarter', 'system');
+                    logMessage('reset - Start new game', 'system');
+                    logMessage('━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━', 'system');
                     break;
-                    
+
+                case 'next_quarter':
+                case 'next':
+                case 'advance':
+                    advanceQuarter();
+                    break;
+
                 case 'reset':
-                    location.reload();
+                    gameState.quarter = 1;
+                    gameState.year = 2025;
+                    gameState.cash = 5000000;
+                    gameState.valuation = 20000000;
+                    gameState.employees = 15;
+                    gameState.morale = 75;
+                    gameState.reputation = 50;
+                    gameState.dodRelations = 40;
+                    gameState.techLevel = 35;
+                    gameState.burnRate = 450000;
+                    gameState.revenue = 100000;
+                    gameState.fundingRound = 'Seed';
+                    gameState.products = {
+                        aiSurveillance: { name: 'AI Surveillance', progress: 20, deployed: false, revenue: 50000 },
+                        autonomousDrone: { name: 'Autonomous Drones', progress: 0, deployed: false, revenue: 75000 },
+                        cyberDefense: { name: 'Cyber Defense Suite', progress: 0, deployed: false, revenue: 60000 }
+                    };
+                    gameState.contracts = [];
+                    gameState.partnerships = [];
+                    gameState.primes = [
+                        { name: 'Lockheed Martin', relation: 0, benefits: { revenue: 100000, reputation: 15, dodRelations: 20 } },
+                        { name: 'Raytheon', relation: 0, benefits: { revenue: 90000, reputation: 12, dodRelations: 18 } },
+                        { name: 'Northrop Grumman', relation: 0, benefits: { revenue: 95000, reputation: 13, dodRelations: 19 } },
+                        { name: 'Boeing Defense', relation: 0, benefits: { revenue: 85000, reputation: 11, dodRelations: 16 } }
+                    ];
+                    gameState.news = [];
+                    gameState.gameOver = false;
+                    logPanel.innerHTML = '';
+                    newsContainer.innerHTML = '';
+                    logMessage('🚀 Welcome to Vanguard Defense Technologies!', 'system');
+                    logMessage('🎯 OBJECTIVE: Build a $1B+ defense tech unicorn by growing valuation through contracts, product development, and strategic partnerships with prime contractors.', 'system');
+                    logMessage('💡 Start with $5M seed funding, 15 employees, and one product in development.', 'system');
+                    logMessage('🤝 NEW: Partner with defense primes like Lockheed Martin, Raytheon, Northrop Grumman, or Boeing Defense for major revenue and credibility boosts.', 'system');
+                    logMessage('⚡ Type "help" for commands or use the buttons below. Good luck, Founder!', 'system');
+                    addNews('Defense tech sector sees surge in startup activity');
                     break;
-                    
+
                 default:
-                    if (cmd) {
-                        sounds.error();
-                        addLog('❌ Unknown command. Type "help"', 'error');
+                    if (command) {
+                        logMessage('❌ Unknown command. Type "help" for available commands.', 'error');
                     }
+                    break;
             }
-            
+
             updateDisplay();
         }
 
-        function handleCommand() {
-            const input = document.getElementById('command-input');
-            const cmd = input.value.trim();
-            if (cmd.toLowerCase() === 'next_quarter' || cmd.toLowerCase() === 'next' || !cmd) {
-                advanceQuarter();
-            } else {
-                processCommand(cmd);
+        commandInput.addEventListener('keypress', function(event) {
+            if (event.key === 'Enter') {
+                processCommand(commandInput.value);
+                commandInput.value = '';
             }
-            input.value = '';
-        }
-
-        document.getElementById('command-input').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') handleCommand();
         });
 
-        window.onload = function() {
-            addLog('🚀 Welcome to Vanguard Defense Technologies!', 'success');
-            addLog('🎯 Goal: Build a $1B+ defense tech unicorn', 'info');
-            addLog('💡 Start: $5M seed, 15 employees, 1 product in dev', 'info');
-            addLog('⚡ Type "help" for commands', 'info');
-            updateDisplay();
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            processCommand('reset');
+        });
     </script>
 </body>
 </html>
